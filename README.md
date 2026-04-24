@@ -36,8 +36,10 @@ JSON‑файлы для тестов находятся в папке **dat/**.
 Визуализация результата (требуется Python 3 и matplotlib):
 
 ```cmd
-python3 viz.py {filename}_out.json
+python3 viz.py .\dat\{filename}_out.json
 ```
+
+![Steiner tree visualization example](img/vis_example.png)
 
 ## Тестирование
 
@@ -54,6 +56,8 @@ test_all.bat
 ```cmd
 python3 compare-logs.py
 ```
+
+![Algorithm speed comparison on a bar chart](img/speed_comp.png)
 
 ## Модификация алгоритма
 Самым простым и действенным методом является распараллеливание цикла перебора кандидатов Ха́нана с помощью OpenMP. При 8 потоках достигается ускорение вплоть до 6 раз по сравнению с однопоточной версией. На малых графах скорость параллельного алгоритма может быть даже ниже, чем у однопоточного.
