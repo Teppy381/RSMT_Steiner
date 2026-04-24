@@ -1,8 +1,8 @@
 #include <algorithm>
+#include <chrono>
 #include <climits>
 #include <cstdlib>
 #include <cstring>
-#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -295,7 +295,7 @@ void parallel_algorithm(const std::vector<Point> &terminals,
       int local_best_x = 0, local_best_y = 0;
 
 #pragma omp for
-      for (size_t i = 0; i < cand_x.size(); ++i) {
+      for (int i = 0; i < static_cast<int>(cand_x.size()); ++i) {
         temp_points.back() = {0, cand_x[i], cand_y[i], 's'};
         double new_len = prim_mst_no_parent(temp_points);
         double gain = cur_len - new_len;
@@ -358,17 +358,15 @@ int main(int argc, char *argv[]) {
   std::vector<Point> result_points;
   std::vector<Edge> result_edges;
 
-  struct timespec start, end;
-  clock_gettime(CLOCK_MONOTONIC, &start);
+  auto start = std::chrono::high_resolution_clock::now();
 
   if (modified)
     parallel_algorithm(terminals, result_points, result_edges);
   else
     basic_algorithm(terminals, result_points, result_edges);
 
-  clock_gettime(CLOCK_MONOTONIC, &end);
-  double elapsed =
-      (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+  auto end = std::chrono::high_resolution_clock::now();
+  double elapsed = std::chrono::duration<double>(end - start).count();
 
   // Формируем имя выходного файла
   std::string outfile = filename;
