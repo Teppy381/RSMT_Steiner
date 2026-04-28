@@ -369,7 +369,12 @@ int main(int argc, char *argv[]) {
   double elapsed = std::chrono::duration<double>(end - start).count();
 
   // Формируем имя выходного файла
-  std::string outfile = filename;
+  std::string basename = filename;
+  size_t last_sep = basename.find_last_of("/\\");
+  if (last_sep != std::string::npos)
+    basename = basename.substr(last_sep + 1);
+
+  std::string outfile = basename;
   size_t dot_pos = outfile.rfind(".json");
   if (dot_pos != std::string::npos)
     outfile = outfile.substr(0, dot_pos) + "_out.json";
